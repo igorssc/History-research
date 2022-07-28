@@ -8,11 +8,11 @@ import "../styles/globals.css";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Menu />
       <ApolloProvider client={client}>
+        <Menu />
         <Component {...pageProps} />
+        <Footer />
       </ApolloProvider>
-      <Footer />
     </>
   );
 }

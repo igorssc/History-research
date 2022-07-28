@@ -1,16 +1,41 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { NextPage } from "next";
 import { ResultCard } from "../components/ResultCard";
 import { VoteDescriptionCard } from "../components/VoteDescriptionCard";
+import { client } from "../lib/apollo";
 
 const GET_VOTES = gql`
-  {
+  query votes {
     votes(orderBy: createdAt_DESC) {
       id
       name
       vote
       description
       createdAt
+    }
+
+    votesInFavor: votesConnection(where: { vote: "A favor" }) {
+      aggregate {
+        count
+      }
+    }
+
+    votesAgainst: votesConnection(where: { vote: "Contra" }) {
+      aggregate {
+        count
+      }
+    }
+
+    votesNoOpinion: votesConnection(where: { vote: "Não sei" }) {
+      aggregate {
+        count
+      }
+    }
+
+    totalVotes: votesConnection {
+      aggregate {
+        count
+      }
     }
   }
 `;
@@ -19,16 +44,44 @@ interface getVotesQueryResponse {
   votes: {
     id: string;
     name: string;
-    vote: string;
+    vote: "Contra" | "A favor" | "Não sei";
     description: string;
     createdAt: string;
   }[];
+  votesInFavor: {
+    aggregate: {
+      count: number;
+    };
+  };
+  votesAgainst: {
+    aggregate: {
+      count: number;
+    };
+  };
+  votesNoOpinion: {
+    aggregate: {
+      count: number;
+    };
+  };
+  totalVotes: {
+    aggregate: {
+      count: number;
+    };
+  };
 }
 
-const Result: NextPage = () => {
-  const { data } = useQuery<getVotesQueryResponse>(GET_VOTES);
+const calcPercent = (value: number, total: number) => {
+  return +((value * 100) / total).toFixed(2);
+};
 
-  console.log(data);
+const Result: NextPage<getVotesQueryResponse> = ({
+  votes,
+  votesInFavor,
+  votesAgainst,
+  votesNoOpinion,
+  totalVotes,
+}) => {
+  console.log(votes);
 
   return (
     <div className="bg-cavalry bg-cover bg-fixed bg-center min-h-screen">
@@ -38,28 +91,62 @@ const Result: NextPage = () => {
             Resultado parcial da enquete
           </h1>
           <div className="grid grid-cols-3 gap-3 lg:gap-10 text-center py-0 lg:py-14">
-            <ResultCard title="Favoráveis" quantity={31} percentage={38} />
-            <ResultCard title="Contras" quantity={31} percentage={38} />
-            <ResultCard title="Não souberam" quantity={31} percentage={38} />
+            <ResultCard
+              title="Favoráveis"
+              quantity={votesInFavor.aggregate.count}
+              percentage={calcPercent(
+                votesInFavor.aggregate.count,
+                totalVotes.aggregate.count
+              )}
+            />
+            <ResultCard
+              title="Contras"
+              quantity={votesAgainst.aggregate.count}
+              percentage={calcPercent(
+                votesAgainst.aggregate.count,
+                totalVotes.aggregate.count
+              )}
+            />
+            <ResultCard
+              title="Não souberam"
+              quantity={votesNoOpinion.aggregate.count}
+              percentage={calcPercent(
+                votesNoOpinion.aggregate.count,
+                totalVotes.aggregate.count
+              )}
+            />
           </div>
           <div className="mt-20 flex flex-col gap-8">
-            <VoteDescriptionCard
-              name="Igor Santos"
-              date={new Date("07/06/2017")}
-              vote="Contra"
-              description="Porque é arbitrário, elimina a participação da sociedade, o que significa um empobrecimento cultural. O que deve prevalecer não é a força das armas, mas das ideias, das propostas dos diálogos com as divergências. Sem liberdade de expressão e de poder de decisão, não pode existir justiça. O poder deve ser alcançado por métodos democráticos. e, uma vez assumido, tem a obrigação de prestar contas à sociedade. No militarismo não tem conversa, as decisões são impostas pela opressão e pelas armas. A prova maior é que foi uma experiência, sob o ponto de vista da humanização, do estabelecimento da justiça, do crescimento econômico, cultural e humano, extremamente negativa."
-            />
-            <VoteDescriptionCard
-              name="Igor Santos"
-              date={new Date("07/06/2017")}
-              vote="Contra"
-              description="Porque é arbitrário, elimina a participação da sociedade, o que significa um empobrecimento cultural. O que deve prevalecer não é a força das armas, mas das ideias, das propostas dos diálogos com as divergências. Sem liberdade de expressão e de poder de decisão, não pode existir justiça. O poder deve ser alcançado por métodos democráticos. e, uma vez assumido, tem a obrigação de prestar contas à sociedade. No militarismo não tem conversa, as decisões são impostas pela opressão e pelas armas. A prova maior é que foi uma experiência, sob o ponto de vista da humanização, do estabelecimento da justiça, do crescimento econômico, cultural e humano, extremamente negativa."
-            />
+            {votes.map((vote) => (
+              <VoteDescriptionCard
+                key={vote.id}
+                name={vote.name}
+                date={new Date(vote.createdAt)}
+                vote={vote.vote}
+                description={vote.description}
+              />
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+export async function getServerSideProps() {
+  const { data } = await client.query<getVotesQueryResponse>({
+    query: GET_VOTES,
+  });
+
+  return {
+    props: {
+      votes: data.votes,
+      votesInFavor: data.votesInFavor,
+      votesAgainst: data.votesAgainst,
+      votesNoOpinion: data.votesNoOpinion,
+      totalVotes: data.totalVotes,
+    },
+  };
+}
 
 export default Result;
