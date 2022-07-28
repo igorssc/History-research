@@ -92,7 +92,7 @@ const Result: NextPage = () => {
     <div className="bg-cavalry bg-cover bg-fixed bg-center min-h-screen">
       <div className="min-h-screen bg-black/75">
         <div className="max-w-[1280px] mx-auto px-3 md:px-5 xl:px-0 pb-20">
-          <h1 className="text-2xl lg:text-3xl py-14 lg:py-20 text-center">
+          <h1 className="text-xl md:text-2xl lg:text-3xl py-14 lg:py-20 text-center">
             Resultado parcial da enquete
           </h1>
           <div className="grid grid-cols-3 gap-3 lg:gap-10 text-center py-0 lg:py-14">
