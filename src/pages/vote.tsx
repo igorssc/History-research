@@ -56,16 +56,19 @@ const Vote: NextPage = () => {
 
     if (!vote) {
       enqueueSnackbar("Por favor, escolha seu voto", { variant: "warning" });
+      setIsButtonDisabled(false);
       return;
     }
     if (!name) {
       enqueueSnackbar("Por favor, insira seu nome", { variant: "warning" });
+      setIsButtonDisabled(false);
       return;
     }
     if (!description) {
       enqueueSnackbar("Por favor, nos dia o motivo de sua opinião", {
         variant: "warning",
       });
+      setIsButtonDisabled(false);
       return;
     }
 
