@@ -102,7 +102,7 @@ const Vote: NextPage = () => {
     <div className="bg-dictatorship bg-cover bg-fixed bg-center min-h-screen">
       <div className="min-h-screen bg-black/75">
         <div className="max-w-[1280px] mx-auto px-5 xl:px-0 pb-20">
-          <h1 className="text-2xl lg:text-3xl py-20 text-center">
+          <h1 className="text-2xl lg:text-3xl py-14 lg:py-20 text-center">
             Qual a sua opinião sobre a intervenção dos militares?
           </h1>
           <form onSubmit={submitForm} className="flex flex-col gap-20">

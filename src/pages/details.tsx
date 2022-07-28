@@ -5,7 +5,7 @@ const Details: NextPage = () => {
     <div className="bg-flag bg-cover bg-fixed bg-center min-h-screen">
       <div className="min-h-screen bg-black/75">
         <div className="max-w-[1280px] mx-auto px-3 md:px-5 xl:px-0 pb-10">
-          <h1 className="text-2xl lg:text-3xl py-20 text-center">
+          <h1 className="text-2xl lg:text-3xl py-14 lg:py-20 text-center">
             Período Militar
           </h1>
           <div className="py-0 lg:py-14 flex flex-col gap-8 text-justify text-base lg:text-xl details">

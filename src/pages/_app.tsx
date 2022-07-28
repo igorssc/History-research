@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { SnackbarProvider } from "notistack";
 import { Footer } from "../components/Footer";
 import { Menu } from "../components/Menu";
+import { ScrollTopButton } from "../components/ScrollTopButton";
 import { client } from "../lib/apollo";
 import "../styles/globals.css";
 
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         >
           <Menu />
           <Component {...pageProps} />
+          <ScrollTopButton />
           <Footer />
         </SnackbarProvider>
       </ApolloProvider>

@@ -7,7 +7,7 @@ const Home: NextPage = () => {
     <div className="bg-home bg-cover bg-center min-h-screen">
       <div className="min-h-screen bg-black/75">
         <div className="max-w-[1280px] mx-auto px-3 md:px-5 xl:px-0 pb-20">
-          <h1 className="text-2xl lg:text-3xl py-20 text-center">
+          <h1 className="text-2xl lg:text-3xl py-14 lg:py-20 text-center">
             Você é a favor da Intervenção Militar no País?
           </h1>
           <p className="py-0 lg:py-14 text-base lg:text-xl text-justify lg:text-center">
