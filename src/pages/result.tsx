@@ -6,7 +6,7 @@ import { VoteDescriptionCard } from "../components/VoteDescriptionCard";
 
 const GET_VOTES = gql`
   query votes {
-    votes(orderBy: createdAt_DESC) {
+    votes(orderBy: createdAt_DESC, first: 5000) {
       id
       name
       vote
@@ -83,10 +83,12 @@ const Result: NextPage = () => {
 
   if (!data) return <></>;
 
+  console.log(data);
+
   return (
     <div className="bg-cavalry bg-cover bg-fixed bg-center min-h-screen">
       <div className="min-h-screen bg-black/75">
-        <div className="max-w-[1280px] mx-auto px-5 xl:px-0 pb-20">
+        <div className="max-w-[1280px] mx-auto px-3 md:px-5 xl:px-0 pb-20">
           <h1 className="text-2xl lg:text-3xl py-20 text-center">
             Resultado parcial da enquete
           </h1>

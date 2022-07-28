@@ -16,7 +16,7 @@ export const VoteDescriptionCard = ({
   description,
 }: VoteDescriptionCardProps) => {
   return (
-    <div className="bg-black/70 hover:bg-black transition-colors flex flex-col rounded-xl p-7">
+    <div className="bg-black/70 hover:bg-black transition-colors flex flex-col rounded-xl p-4 md:p-7">
       <div className="flex flex-row justify-between items-center">
         <strong className="text-lg">{name}</strong>
         <span className="text-sm capitalize hidden md:block">
@@ -24,7 +24,7 @@ export const VoteDescriptionCard = ({
             locale: ptBR,
           })}
         </span>
-        <span className="text-sm capitalize block md:hidden">
+        <span className="text-xs capitalize block md:hidden">
           {format(date, "d'/'MM'/'yyyy", {
             locale: ptBR,
           })}
@@ -38,7 +38,7 @@ export const VoteDescriptionCard = ({
           : vote === "noOpinion" && "Não sei"}
       </span>
       <div
-        className="mt-5 text-justify"
+        className="mt-5 text-justify text-sm"
         dangerouslySetInnerHTML={{ __html: description.replace("\n", "<br/>") }}
       ></div>
     </div>
