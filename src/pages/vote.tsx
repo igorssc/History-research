@@ -1,7 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Button } from "../components/Button";
 import { VoteIcon } from "../components/VoteIcon";
 
@@ -13,11 +14,25 @@ const CREATE_VOTE = gql`
   }
 `;
 
+const PUBLISH_VOTE = gql`
+  mutation PublishVote($id: ID!) {
+    publishVote(where: { id: $id }, to: PUBLISHED) {
+      id
+    }
+  }
+`;
+
+interface publishVoteMutationResponse {
+  publishVote: { id: string };
+}
+
 interface createVoteMutationResponse {
-  id: string;
+  createVote: { id: string };
 }
 
 const Vote: NextPage = () => {
+  const { push } = useRouter();
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [vote, setVote] = useState<null | "inFavor" | "against" | "noOpinion">(
@@ -26,11 +41,18 @@ const Vote: NextPage = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
-  const [mutateFunction, { data, loading, error }] =
+  const [IsButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const [createVoteMutateFunction] =
     useMutation<createVoteMutationResponse>(CREATE_VOTE);
 
-  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+  const [publishVoteMutateFunction] =
+    useMutation<publishVoteMutationResponse>(PUBLISH_VOTE);
+
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setIsButtonDisabled(true);
 
     if (!vote) {
       enqueueSnackbar("Por favor, escolha seu voto", { variant: "warning" });
@@ -47,12 +69,34 @@ const Vote: NextPage = () => {
       return;
     }
 
-    mutateFunction({ variables: { name, vote, description } });
-  };
+    try {
+      await createVoteMutateFunction({
+        variables: { name, vote, description },
+      }).then(async ({ data }) => {
+        await publishVoteMutateFunction({
+          variables: { id: (data as createVoteMutationResponse).createVote.id },
+        });
 
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
+        setVote(null);
+        setName("");
+        setDescription("");
+
+        enqueueSnackbar("Voto registrado com sucesso", {
+          variant: "success",
+        });
+
+        setIsButtonDisabled(false);
+
+        push("/result");
+      });
+    } catch {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente mais tarde.", {
+        variant: "error",
+      });
+
+      setIsButtonDisabled(false);
+    }
+  };
 
   return (
     <div className="bg-dictatorship bg-cover bg-fixed bg-center min-h-screen">
@@ -61,21 +105,7 @@ const Vote: NextPage = () => {
           <h1 className="text-2xl lg:text-3xl py-20 text-center">
             Qual a sua opinião sobre a intervenção dos militares?
           </h1>
-          <form
-            action="#"
-            onSubmit={(event) => {
-              event.preventDefault();
-
-              console.log({
-                name,
-                vote,
-                description,
-              });
-
-              submitForm(event);
-            }}
-            className="flex flex-col gap-20"
-          >
+          <form onSubmit={submitForm} className="flex flex-col gap-20">
             <div className="grid grid-cols-3">
               <VoteIcon
                 title="A favor"
@@ -129,7 +159,7 @@ const Vote: NextPage = () => {
               type="submit"
               text="Confirmar voto"
               className="w-96 max-w-full mx-auto"
-              disabled={!loading}
+              disabled={IsButtonDisabled}
             />
           </form>
         </div>

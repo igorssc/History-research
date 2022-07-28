@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { NextPage } from "next";
+import { useEffect } from "react";
 import { ResultCard } from "../components/ResultCard";
 import { VoteDescriptionCard } from "../components/VoteDescriptionCard";
-import { client } from "../lib/apollo";
 
 const GET_VOTES = gql`
   query votes {
@@ -14,19 +14,19 @@ const GET_VOTES = gql`
       createdAt
     }
 
-    votesInFavor: votesConnection(where: { vote: "A favor" }) {
+    votesInFavor: votesConnection(where: { vote: "inFavor" }) {
       aggregate {
         count
       }
     }
 
-    votesAgainst: votesConnection(where: { vote: "Contra" }) {
+    votesAgainst: votesConnection(where: { vote: "against" }) {
       aggregate {
         count
       }
     }
 
-    votesNoOpinion: votesConnection(where: { vote: "Não sei" }) {
+    votesNoOpinion: votesConnection(where: { vote: "noOpinion" }) {
       aggregate {
         count
       }
@@ -44,7 +44,7 @@ interface getVotesQueryResponse {
   votes: {
     id: string;
     name: string;
-    vote: "Contra" | "A favor" | "Não sei";
+    vote: "inFavor" | "against" | "noOpinion";
     description: string;
     createdAt: string;
   }[];
@@ -74,14 +74,14 @@ const calcPercent = (value: number, total: number) => {
   return +((value * 100) / total).toFixed(2);
 };
 
-const Result: NextPage<getVotesQueryResponse> = ({
-  votes,
-  votesInFavor,
-  votesAgainst,
-  votesNoOpinion,
-  totalVotes,
-}) => {
-  console.log(votes);
+const Result: NextPage = () => {
+  const { data, refetch } = useQuery<getVotesQueryResponse>(GET_VOTES);
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  if (!data) return <></>;
 
   return (
     <div className="bg-cavalry bg-cover bg-fixed bg-center min-h-screen">
@@ -93,31 +93,37 @@ const Result: NextPage<getVotesQueryResponse> = ({
           <div className="grid grid-cols-3 gap-3 lg:gap-10 text-center py-0 lg:py-14">
             <ResultCard
               title="Favoráveis"
-              quantity={votesInFavor.aggregate.count}
-              percentage={calcPercent(
-                votesInFavor.aggregate.count,
-                totalVotes.aggregate.count
-              )}
+              quantity={data.votesInFavor.aggregate.count}
+              percentage={
+                calcPercent(
+                  data.votesInFavor.aggregate.count,
+                  data.totalVotes.aggregate.count
+                ) || 0
+              }
             />
             <ResultCard
               title="Contras"
-              quantity={votesAgainst.aggregate.count}
-              percentage={calcPercent(
-                votesAgainst.aggregate.count,
-                totalVotes.aggregate.count
-              )}
+              quantity={data.votesAgainst.aggregate.count}
+              percentage={
+                calcPercent(
+                  data.votesAgainst.aggregate.count,
+                  data.totalVotes.aggregate.count
+                ) || 0
+              }
             />
             <ResultCard
               title="Não souberam"
-              quantity={votesNoOpinion.aggregate.count}
-              percentage={calcPercent(
-                votesNoOpinion.aggregate.count,
-                totalVotes.aggregate.count
-              )}
+              quantity={data.votesNoOpinion.aggregate.count}
+              percentage={
+                calcPercent(
+                  data.votesNoOpinion.aggregate.count,
+                  data.totalVotes.aggregate.count
+                ) || 0
+              }
             />
           </div>
           <div className="mt-20 flex flex-col gap-8">
-            {votes.map((vote) => (
+            {data.votes.map((vote) => (
               <VoteDescriptionCard
                 key={vote.id}
                 name={vote.name}
@@ -132,21 +138,5 @@ const Result: NextPage<getVotesQueryResponse> = ({
     </div>
   );
 };
-
-export async function getServerSideProps() {
-  const { data } = await client.query<getVotesQueryResponse>({
-    query: GET_VOTES,
-  });
-
-  return {
-    props: {
-      votes: data.votes,
-      votesInFavor: data.votesInFavor,
-      votesAgainst: data.votesAgainst,
-      votesNoOpinion: data.votesNoOpinion,
-      totalVotes: data.totalVotes,
-    },
-  };
-}
 
 export default Result;

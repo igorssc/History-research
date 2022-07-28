@@ -3,11 +3,12 @@ import ptBR from "date-fns/locale/pt-BR";
 
 interface VoteDescriptionCardProps {
   name: string;
+  vote: "inFavor" | "against" | "noOpinion";
   date: Date;
-  vote: "Contra" | "A favor" | "Não sei";
   description: string;
 }
 
+// vote: "Contra" | "A favor" | "Não sei";
 export const VoteDescriptionCard = ({
   name,
   date,
@@ -29,8 +30,17 @@ export const VoteDescriptionCard = ({
           })}
         </span>
       </div>
-      <span className="text-base my-2">{vote}</span>
-      <p className="mt-5 text-justify">{description}</p>
+      <span className="text-base my-2">
+        {vote === "inFavor"
+          ? "A favor"
+          : vote === "against"
+          ? "Contra"
+          : vote === "noOpinion" && "Não sei"}
+      </span>
+      <div
+        className="mt-5 text-justify"
+        dangerouslySetInnerHTML={{ __html: description.replace("\n", "<br/>") }}
+      ></div>
     </div>
   );
 };

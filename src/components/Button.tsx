@@ -6,11 +6,17 @@ interface ButtonProps extends HTMLProps<HTMLButtonElement> {
   className?: string;
 }
 
-export const Button = ({ text, type = "button", className }: ButtonProps) => {
+export const Button = ({
+  text,
+  type = "button",
+  className,
+  ...rest
+}: ButtonProps) => {
   return (
     <button
-      className={`py-6 px-20 bg-black/70 rounded hover:bg-black transition-colors border-2 uppercase border-double border-gray-300 disabled:bg-green-300 disabled:cursor-not-allowed ${className}`}
+      className={`py-6 px-20 bg-black/70 rounded hover:bg-black transition-colors border-2 uppercase border-double border-gray-300 disabled:cursor-not-allowed ${className}`}
       type={type}
+      {...rest}
     >
       {text}
     </button>
