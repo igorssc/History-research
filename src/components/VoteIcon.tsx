@@ -3,16 +3,16 @@ import { Checks } from "phosphor-react";
 interface VoteIconProps {
   title: string;
   value: string;
-  nameInput: string;
   checked: boolean;
+  required?: boolean;
   onChange: (value: null | "inFavor" | "against" | "noOpinion") => void;
 }
 
 export const VoteIcon = ({
   title,
   value,
-  nameInput,
   checked,
+  required = false,
   onChange,
 }: VoteIconProps) => {
   return (
@@ -20,10 +20,10 @@ export const VoteIcon = ({
       <input
         type="radio"
         id={`vote-${value}`}
-        name={nameInput}
         value={value}
         className="hidden peer"
         checked={checked}
+        required={required}
         onChange={(event) =>
           onChange(
             event.target.value as null | "inFavor" | "against" | "noOpinion"

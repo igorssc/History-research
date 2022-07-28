@@ -1,5 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import type { AppProps } from "next/app";
+import { SnackbarProvider } from "notistack";
 import { Footer } from "../components/Footer";
 import { Menu } from "../components/Menu";
 import { client } from "../lib/apollo";
@@ -9,9 +10,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <ApolloProvider client={client}>
-        <Menu />
-        <Component {...pageProps} />
-        <Footer />
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <Menu />
+          <Component {...pageProps} />
+          <Footer />
+        </SnackbarProvider>
       </ApolloProvider>
     </>
   );

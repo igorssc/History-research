@@ -1,14 +1,58 @@
+import { gql, useMutation } from "@apollo/client";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useSnackbar } from "notistack";
+import { FormEvent, useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import { VoteIcon } from "../components/VoteIcon";
 
+const CREATE_VOTE = gql`
+  mutation CreateVote($name: String!, $vote: String!, $description: String!) {
+    createVote(data: { name: $name, vote: $vote, description: $description }) {
+      id
+    }
+  }
+`;
+
+interface createVoteMutationResponse {
+  id: string;
+}
+
 const Vote: NextPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [vote, setVote] = useState<null | "inFavor" | "against" | "noOpinion">(
     null
   );
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+
+  const [mutateFunction, { data, loading, error }] =
+    useMutation<createVoteMutationResponse>(CREATE_VOTE);
+
+  const submitForm = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!vote) {
+      enqueueSnackbar("Por favor, escolha seu voto", { variant: "warning" });
+      return;
+    }
+    if (!name) {
+      enqueueSnackbar("Por favor, insira seu nome", { variant: "warning" });
+      return;
+    }
+    if (!description) {
+      enqueueSnackbar("Por favor, nos dia o motivo de sua opinião", {
+        variant: "warning",
+      });
+      return;
+    }
+
+    mutateFunction({ variables: { name, vote, description } });
+  };
+
+  useEffect(() => {
+    console.log(loading);
+  }, [loading]);
 
   return (
     <div className="bg-dictatorship bg-cover bg-fixed bg-center min-h-screen">
@@ -28,33 +72,29 @@ const Vote: NextPage = () => {
                 description,
               });
 
-              fetch("./api/votes/", {
-                method: "GET",
-              }).then((response) => {
-                console.log(response);
-              });
+              submitForm(event);
             }}
             className="flex flex-col gap-20"
           >
             <div className="grid grid-cols-3">
               <VoteIcon
-                nameInput="vote"
                 title="A favor"
                 value="inFavor"
+                required
                 checked={vote === "inFavor"}
                 onChange={setVote}
               />
               <VoteIcon
-                nameInput="vote"
                 title="Contra"
                 value="against"
+                required
                 checked={vote === "against"}
                 onChange={setVote}
               />
               <VoteIcon
-                nameInput="vote"
                 title="Não sei"
                 value="noOpinion"
+                required
                 checked={vote === "noOpinion"}
                 onChange={setVote}
               />
@@ -68,6 +108,7 @@ const Vote: NextPage = () => {
                   placeholder="Digite seu nome"
                   className="p-3 rounded text-black"
                   value={name}
+                  required
                   onChange={(event) => setName(event.target.value)}
                 />
               </div>
@@ -79,6 +120,7 @@ const Vote: NextPage = () => {
                   className="p-3 rounded text-black"
                   rows={10}
                   value={description}
+                  required
                   onChange={(event) => setDescription(event.target.value)}
                 />
               </div>
@@ -87,6 +129,7 @@ const Vote: NextPage = () => {
               type="submit"
               text="Confirmar voto"
               className="w-96 max-w-full mx-auto"
+              disabled={!loading}
             />
           </form>
         </div>
