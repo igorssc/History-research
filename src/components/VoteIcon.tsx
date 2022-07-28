@@ -32,7 +32,7 @@ export const VoteIcon = ({
       />
       <label
         htmlFor={`vote-${value}`}
-        className="text-black text-xl md:text-3xl font-bold w-full h-full bg-white/70 peer-checked:bg-white peer-checked:border-8 peer-checked:border-green-700/80 hover:bg-white cursor-pointer transition-colors rounded-full flex flex-col flex-1 items-center justify-center"
+        className="text-black uppercase text-lg md:text-2xl lg:text-3xl font-bold w-full h-full bg-white/70 peer-checked:bg-white peer-checked:border-8 peer-checked:border-green-700/80 hover:bg-white cursor-pointer transition-colors rounded-full flex flex-col flex-1 items-center justify-center"
       >
         {title}
       </label>

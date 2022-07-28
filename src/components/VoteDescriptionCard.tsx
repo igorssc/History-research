@@ -20,7 +20,7 @@ export const VoteDescriptionCard = ({
       <div className="flex flex-row justify-between items-center">
         <strong className="text-lg">{name}</strong>
         <span className="text-sm capitalize hidden md:block">
-          {format(date, "E' • 'd' de 'MMMM' • 'k'h'mm", {
+          {format(date, "E' • 'd' de 'MMMM' de 'yyyy' • 'k'h'mm", {
             locale: ptBR,
           })}
         </span>
