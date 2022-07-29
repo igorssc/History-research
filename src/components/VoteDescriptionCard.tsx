@@ -18,7 +18,9 @@ export const VoteDescriptionCard = ({
   return (
     <div className="bg-black/70 hover:bg-black transition-colors flex flex-col rounded-xl p-4 md:p-7">
       <div className="flex flex-row justify-between items-center">
-        <strong className="text-lg text-green-500 ">{name}</strong>
+        <strong className="text-lg text-green-500 capitalize">
+          {name.toLowerCase()}
+        </strong>
         <span className="text-sm capitalize hidden md:block text-green-600 ">
           {format(date, "E' • 'd' de 'MMMM' de 'yyyy' • 'k'h'mm", {
             locale: ptBR,
