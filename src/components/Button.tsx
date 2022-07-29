@@ -14,7 +14,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`py-6 px-20 bg-black/70 rounded hover:bg-black transition-colors border-2 uppercase border-double border-gray-300 disabled:cursor-not-allowed ${className}`}
+      className={`py-6 px-20 bg-black/70 rounded hover:bg-black transition-colors border-2 uppercase border-double border-green-500 text-green-400 disabled:cursor-not-allowed ${className}`}
       type={type}
       {...rest}
     >

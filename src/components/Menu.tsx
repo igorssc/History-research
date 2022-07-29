@@ -22,7 +22,7 @@ export const Menu = () => {
         <div className="flex justify-between">
           <div className="flex">
             <div className="flex items-center py-4">
-              <Paperclip size={32} className="mr-10" />
+              <Paperclip size={32} className="mr-10 text-green-500 " />
             </div>
 
             <div className="hidden md:flex items-center space-x-1 gap-5">

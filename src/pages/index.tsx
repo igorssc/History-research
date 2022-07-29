@@ -30,7 +30,7 @@ const Home: NextPage = () => {
               <span className="mx-auto">
                 <Button
                   text="Participe da enquete"
-                  className="w-96 max-w-full"
+                  className="w-full sm:w-96 max-w-full px-14 sm:px-20"
                 />
               </span>
             </Link>
@@ -38,7 +38,7 @@ const Home: NextPage = () => {
               <span className="mx-auto">
                 <Button
                   text="Resultado da enquete"
-                  className="w-96 max-w-full"
+                  className="w-full sm:w-96 max-w-full px-14 sm:px-20"
                 />
               </span>
             </Link>

@@ -18,13 +18,13 @@ export const VoteDescriptionCard = ({
   return (
     <div className="bg-black/70 hover:bg-black transition-colors flex flex-col rounded-xl p-4 md:p-7">
       <div className="flex flex-row justify-between items-center">
-        <strong className="text-lg">{name}</strong>
-        <span className="text-sm capitalize hidden md:block">
+        <strong className="text-lg text-green-500 ">{name}</strong>
+        <span className="text-sm capitalize hidden md:block text-green-500 ">
           {format(date, "E' • 'd' de 'MMMM' de 'yyyy' • 'k'h'mm", {
             locale: ptBR,
           })}
         </span>
-        <span className="text-xs capitalize block md:hidden">
+        <span className="text-xs capitalize block md:hidden text-green-500 ">
           {format(date, "d'/'MM'/'yyyy", {
             locale: ptBR,
           })}
