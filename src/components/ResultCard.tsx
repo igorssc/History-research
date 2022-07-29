@@ -11,7 +11,7 @@ export const ResultCard = ({ title, quantity, percentage }: ResultCard) => {
       <span className="py-4 text-xs md:text-sm lg:text-base">
         {percentage}%
       </span>
-      <span className="text-sm md:text-base uppercase">{title}</span>
+      <span className="text-xs sm:text-sm md:text-base uppercase">{title}</span>
     </div>
   );
 };
