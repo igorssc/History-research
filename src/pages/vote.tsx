@@ -6,13 +6,39 @@ import { FormEvent, useState } from "react";
 import { Button } from "../components/Button";
 import { VoteIcon } from "../components/VoteIcon";
 
-const CREATE_VOTE = gql`
-  mutation CreateVote($name: String!, $vote: String!, $description: String!) {
-    createVote(data: { name: $name, vote: $vote, description: $description }) {
-      id
-    }
-  }
-`;
+const isDevelopment = process.env.NODE_ENV === "development";
+
+const CREATE_VOTE = isDevelopment
+  ? gql`
+      mutation CreateVote(
+        $name: String!
+        $vote: String!
+        $description: String!
+        $createdAt: String!
+      ) {
+        createVote(
+          name: $name
+          vote: $vote
+          description: $description
+          createdAt: $createdAt
+        ) {
+          id
+        }
+      }
+    `
+  : gql`
+      mutation CreateVote(
+        $name: String!
+        $vote: String!
+        $description: String!
+      ) {
+        createVote(
+          data: { name: $name, vote: $vote, description: $description }
+        ) {
+          id
+        }
+      }
+    `;
 
 const PUBLISH_VOTE = gql`
   mutation PublishVote($id: ID!) {
@@ -74,11 +100,14 @@ const Vote: NextPage = () => {
 
     try {
       await createVoteMutateFunction({
-        variables: { name, vote, description },
+        variables: { name, vote, description, createdAt: new Date() },
       }).then(async ({ data }) => {
-        await publishVoteMutateFunction({
-          variables: { id: (data as createVoteMutationResponse).createVote.id },
-        });
+        !isDevelopment &&
+          (await publishVoteMutateFunction({
+            variables: {
+              id: (data as createVoteMutationResponse).createVote.id,
+            },
+          }));
 
         setVote(null);
         setName("");

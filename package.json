@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "json-graphql-server db.js --p 8080"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
@@ -15,6 +16,7 @@
     "@mui/material": "^5.9.2",
     "date-fns": "^2.29.1",
     "graphql": "^16.5.0",
+    "json-graphql-server": "^2.3.2",
     "next": "12.2.3",
     "notistack": "^2.0.5",
     "phosphor-react": "^1.4.1",

@@ -1,84 +1,31 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
 import { useEffect } from "react";
 import { ResultCard } from "../components/ResultCard";
 import { VoteDescriptionCard } from "../components/VoteDescriptionCard";
+import {
+  getVotesQueryResponseDev,
+  getVotesQueryResponseProd,
+  GET_VOTES,
+} from "../db/getVotes";
 
-const GET_VOTES = gql`
-  query votes {
-    votes(orderBy: createdAt_DESC, first: 5000) {
-      id
-      name
-      vote
-      description
-      createdAt
-    }
+type getVotesQueryResponse<T> = T extends true
+  ? getVotesQueryResponseDev
+  : getVotesQueryResponseProd;
 
-    votesInFavor: votesConnection(where: { vote: "inFavor" }) {
-      aggregate {
-        count
-      }
-    }
-
-    votesAgainst: votesConnection(where: { vote: "against" }) {
-      aggregate {
-        count
-      }
-    }
-
-    votesNoOpinion: votesConnection(where: { vote: "noOpinion" }) {
-      aggregate {
-        count
-      }
-    }
-
-    totalVotes: votesConnection {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-interface getVotesQueryResponse {
-  votes: {
-    id: string;
-    name: string;
-    vote: "inFavor" | "against" | "noOpinion";
-    description: string;
-    createdAt: string;
-  }[];
-  votesInFavor: {
-    aggregate: {
-      count: number;
-    };
-  };
-  votesAgainst: {
-    aggregate: {
-      count: number;
-    };
-  };
-  votesNoOpinion: {
-    aggregate: {
-      count: number;
-    };
-  };
-  totalVotes: {
-    aggregate: {
-      count: number;
-    };
-  };
-}
+const isDevelopment = process.env.NODE_ENV === "development" ? true : undefined;
 
 const calcPercent = (value: number, total: number) => {
   return +((value * 100) / total).toFixed(2);
 };
 
 const Result: NextPage = () => {
-  const { data, refetch } = useQuery<getVotesQueryResponse>(GET_VOTES);
+  const { data, refetch } =
+    useQuery<getVotesQueryResponse<typeof isDevelopment>>(GET_VOTES);
 
   useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!data)
@@ -98,37 +45,61 @@ const Result: NextPage = () => {
           <div className="grid grid-cols-3 gap-3 lg:gap-10 text-center py-0 lg:py-14">
             <ResultCard
               title="Favoráveis"
-              quantity={data.votesInFavor.aggregate.count}
+              quantity={
+                isDevelopment
+                  ? data.inFavor.length
+                  : data.votesInFavor.aggregate.count
+              }
               percentage={
                 calcPercent(
-                  data.votesInFavor.aggregate.count,
-                  data.totalVotes.aggregate.count
+                  isDevelopment
+                    ? data.inFavor.length
+                    : data.votesInFavor.aggregate.count,
+                  isDevelopment
+                    ? data.allVotes.length
+                    : data.totalVotes.aggregate.count
                 ) || 0
               }
             />
             <ResultCard
               title="Contras"
-              quantity={data.votesAgainst.aggregate.count}
+              quantity={
+                isDevelopment
+                  ? data.against.length
+                  : data.votesAgainst.aggregate.count
+              }
               percentage={
                 calcPercent(
-                  data.votesAgainst.aggregate.count,
-                  data.totalVotes.aggregate.count
+                  isDevelopment
+                    ? data.against.length
+                    : data.votesAgainst.aggregate.count,
+                  isDevelopment
+                    ? data.allVotes.length
+                    : data.totalVotes.aggregate.count
                 ) || 0
               }
             />
             <ResultCard
               title="Não souberam"
-              quantity={data.votesNoOpinion.aggregate.count}
+              quantity={
+                isDevelopment
+                  ? data.noOpinion.length
+                  : data.votesNoOpinion.aggregate.count
+              }
               percentage={
                 calcPercent(
-                  data.votesNoOpinion.aggregate.count,
-                  data.totalVotes.aggregate.count
+                  isDevelopment
+                    ? data.noOpinion.length
+                    : data.votesNoOpinion.aggregate.count,
+                  isDevelopment
+                    ? data.allVotes.length
+                    : data.totalVotes.aggregate.count
                 ) || 0
               }
             />
           </div>
           <div className="mt-20 flex flex-col gap-8">
-            {data.votes.map((vote) => (
+            {data[isDevelopment ? "allVotes" : "votes"].map((vote) => (
               <VoteDescriptionCard
                 key={vote.id}
                 name={vote.name}
