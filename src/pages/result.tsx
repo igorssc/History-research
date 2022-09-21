@@ -15,8 +15,6 @@ type getVotesQueryResponse<T> = T extends true
 
 const isDevelopment = process.env.NODE_ENV === "development" ? true : undefined;
 
-console.log(isDevelopment);
-
 const calcPercent = (value: number, total: number) => {
   return +((value * 100) / total).toFixed(2);
 };
@@ -24,6 +22,8 @@ const calcPercent = (value: number, total: number) => {
 const Result: NextPage = () => {
   const { data, refetch } =
     useQuery<getVotesQueryResponse<typeof isDevelopment>>(GET_VOTES);
+
+  console.log(data);
 
   useEffect(() => {
     refetch();
