@@ -15,6 +15,8 @@ type getVotesQueryResponse<T> = T extends true
 
 const isDevelopment = process.env.NODE_ENV === "development" ? true : undefined;
 
+console.log(isDevelopment);
+
 const calcPercent = (value: number, total: number) => {
   return +((value * 100) / total).toFixed(2);
 };
