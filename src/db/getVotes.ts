@@ -2,65 +2,41 @@ import { gql } from "@apollo/client";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
-export const GET_VOTES = isDevelopment
-  ? gql`
-      query votes {
-        allVotes(sortOrder: "createdAt") {
-          id
-          name
-          vote
-          description
-          createdAt
-        }
+export const GET_VOTES = gql`
+  query votes {
+    votes(orderBy: createdAt_DESC, first: 5000) {
+      id
+      name
+      vote
+      description
+      createdAt
+    }
 
-        inFavor: allVotes(filter: { vote: "inFavor" }) {
-          id
-        }
-
-        against: allVotes(filter: { vote: "against" }) {
-          id
-        }
-
-        noOpinion: allVotes(filter: { vote: "noOpinion" }) {
-          id
-        }
+    votesInFavor: votesConnection(where: { vote: "inFavor" }) {
+      aggregate {
+        count
       }
-    `
-  : gql`
-      query votes {
-        votes(orderBy: createdAt_DESC, first: 5000) {
-          id
-          name
-          vote
-          description
-          createdAt
-        }
+    }
 
-        votesInFavor: votesConnection(where: { vote: "inFavor" }) {
-          aggregate {
-            count
-          }
-        }
-
-        votesAgainst: votesConnection(where: { vote: "against" }) {
-          aggregate {
-            count
-          }
-        }
-
-        votesNoOpinion: votesConnection(where: { vote: "noOpinion" }) {
-          aggregate {
-            count
-          }
-        }
-
-        totalVotes: votesConnection {
-          aggregate {
-            count
-          }
-        }
+    votesAgainst: votesConnection(where: { vote: "against" }) {
+      aggregate {
+        count
       }
-    `;
+    }
+
+    votesNoOpinion: votesConnection(where: { vote: "noOpinion" }) {
+      aggregate {
+        count
+      }
+    }
+
+    totalVotes: votesConnection {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
 
 export interface getVotesQueryResponseDev {
   allVotes: {
