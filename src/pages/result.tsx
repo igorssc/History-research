@@ -20,9 +20,8 @@ const calcPercent = (value: number, total: number) => {
 };
 
 const Result: NextPage = () => {
-  const { data, refetch } = useQuery(GET_VOTES);
-
-  console.log(data);
+  const { data, refetch } =
+    useQuery<getVotesQueryResponse<typeof isDevelopment>>(GET_VOTES);
 
   useEffect(() => {
     refetch();
@@ -100,7 +99,7 @@ const Result: NextPage = () => {
             />
           </div>
           <div className="mt-20 flex flex-col gap-8">
-            {data[isDevelopment ? "allVotes" : "votes"].map((vote: any) => (
+            {data[isDevelopment ? "allVotes" : "votes"].map((vote) => (
               <VoteDescriptionCard
                 key={vote.id}
                 name={vote.name}
