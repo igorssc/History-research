@@ -1,34 +1,134 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![cover](https://user-images.githubusercontent.com/26682297/191619100-aa2d1c7e-f2a5-492c-9f04-07baef0936ae.jpg)
 
-## Getting Started
+History Research was a high school project, created in 2017, at a time when the political landscape of Brazil was tense with supporters of the return of the military period.
 
-First, run the development server:
+Initially the project was developed in PHP and JavaScript with MySQL database. In 2022 it was redone using more current technologies for development.
+
+- [Technologies](#technologies)
+- [How to run](#how-to-run)
+- [Production](#production)
+  - [Hygraph](#hygraph)
+  - [Environment variables](#environment-variables)
+- [Preview](#preview)
+- [Licence](#license)
+
+<a id="technologies"></a>
+
+## ✨ Technologies
+
+This project was developed with the following technologies:
+
+- React
+- Next.js
+- TypeScript
+- Tailwindcss
+- GraphQL
+- Apollo Client
+
+<a id="how-to-run"></a>
+
+## 🚀 How to run
+
+- Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
+git clone https://github.com/igorssc/history-research.git
+
+cd history-research
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Install dependencies
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+yarn
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+# or
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+npm init
+```
 
-## Learn More
+- Start the GraphQL Server
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+yarn server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# or
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+npm run server
+```
 
-## Deploy on Vercel
+> In development environment, [json-graphql-server](https://github.com/marmelab/json-graphql-server) is used to simulate the content storage service.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Start the NextJs server
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+yarn dev
+
+# or
+
+npm run dev
+```
+
+You can now access [`localhost:3000`](http://localhost:3000) from your browser.
+
+<a id="production"></a>
+
+## 🎗️ Production
+
+<a id="hygraph"></a>
+
+### 🎲 Hygraph
+
+To configure the content storage service, you must follow a few steps:
+
+1. Go to the website <https://hygraph.com> and create a new project;
+
+2. Create a schema model as in the image below:
+
+<img src="https://user-images.githubusercontent.com/26682297/191612078-8fec2f38-4c1c-4914-a6a5-4f3f71d58cba.png" width="600em">
+
+3. In the project settings, copy your Master Environment Url:
+
+<img src="https://user-images.githubusercontent.com/26682297/191612090-d52375b4-2cdf-4151-8edd-8dfab439f5da.png" width="600em">
+
+> It will be used in the environment variables
+
+4. Create an Permanent Access Token:
+
+<img src="https://user-images.githubusercontent.com/26682297/191612108-5abae9a8-be7a-475b-8c88-a64d8ee9dfdf.png" width="600em">
+
+5. Change the permissions of your permanent access token, and leave it as below:
+
+<img src="https://user-images.githubusercontent.com/26682297/191612116-3ec54d1b-6ce3-40cb-9ac6-bbd02e60d3bf.png" width="600em">
+
+<a id="environment-variables"></a>
+
+### 🔐 Environment variables
+
+In this project, `environment variables are used only in production`, to connect with the content storage service [hygraph](https://hygraph.com/).
+
+Locally, [json-graphql-server](https://github.com/marmelab/json-graphql-server) is used to simulate the content storage service.
+
+For the correct operation of the system, the following environment variables must be used:
+
+```
+NEXT_PUBLIC_API_URL=your-hygraph-master-environment-url
+
+NEXT_PUBLIC_API_ACCESS_TOKEN=your-hygraph-permanent-token
+```
+
+<a id="preview"></a>
+
+## 🪄 Preview
+
+Access <https://www.history-research.vercel.app>
+
+<a id="license"></a>
+
+## 📝 Licence
+
+This project is under MIT licence. See the archive [LICENSE](LICENSE.md) to more details.
+
+---
+
+Made with 💜 by [IGS Design](https://igsdesign.com.br) - Igor Santos 👋
