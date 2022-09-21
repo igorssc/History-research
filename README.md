@@ -121,7 +121,7 @@ NEXT_PUBLIC_API_ACCESS_TOKEN=your-hygraph-permanent-token
 
 ## 🪄 Preview
 
-Access <https://www.history-research.vercel.app>
+Access <https://history-research.vercel.app>
 
 <a id="license"></a>
 
