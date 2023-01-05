@@ -10,7 +10,7 @@ Initially the project was developed in PHP and JavaScript with MySQL database. I
   - [Hygraph](#hygraph)
   - [Environment variables](#environment-variables)
 - [Preview](#preview)
-- [Licence](#license)
+- [License](#license)
 
 <a id="technologies"></a>
 
@@ -125,7 +125,7 @@ Access <https://history-research.vercel.app>
 
 <a id="license"></a>
 
-## 📝 Licence
+## 📝 License
 
 This project is under MIT licence. See the archive [LICENSE](LICENSE.md) to more details.
 
