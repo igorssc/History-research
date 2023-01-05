@@ -83,7 +83,7 @@ To configure the content storage service, you must follow a few steps:
 
 1. Go to the website <https://hygraph.com> and create a new project;
 
-2. Create a schema model as in the image below:
+2. Create a schema model, named "Vote", as in the image below:
 
 <img src="https://user-images.githubusercontent.com/26682297/191612078-8fec2f38-4c1c-4914-a6a5-4f3f71d58cba.png" width="600em">
 
