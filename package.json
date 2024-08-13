@@ -1,5 +1,5 @@
 {
-  "name": "enquete-historia",
+  "name": "history-research",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "json-graphql-server db.js --p 8080"
+    "server": "json-graphql-server db.json --p 8080"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
